@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUTRA - Sistema de Apoio Clínico de Precisão</title>
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:wght@450;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"DM Sans"', 'Inter', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        mono: ['"Space Mono"', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            emerald: '#00C896',
+                            emerald2: '#00A67E',
+                            dark: '#0D1117',
+                            card: '#FFFFFF',
+                            cardDark: '#161B27',
+                            bg: '#F8F9FC',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg: #F8F9FC;
+            --dark: #0D1117;
+            --card: #FFFFFF;
+            --emerald: #00C896;
+            --emerald2: #00A67E;
+            --emerald-glow: rgba(0, 200, 150, 0.08);
+            --blue: #4F8EF7;
+            --red: #FF4757;
+            --amber: #FFB830;
+            --text: #1A1D23;
+            --muted: rgba(26, 29, 35, 0.5);
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .dark-mode {
+            --bg: #0D1117;
+            --card: #161B27;
+            --text: #F3F4F6;
+            --muted: rgba(255, 255, 255, 0.5);
+        }
+
+        .kpi-card {
+            background: var(--card);
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.015);
+            transition: all 0.2s;
+        }
+
+        .dark-mode .kpi-card {
+            border-color: rgba(255, 255, 255, 0.08);
+            background-color: var(--card);
+        }
+
+        .kpi-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .kpi-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--emerald);
+        }
+
+        .section-card {
+            background: var(--card);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+        }
+
+        .dark-mode .section-card {
+            border-color: rgba(255, 255, 255, 0.08);
+            background-color: var(--card);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .patient-progress-row {
+            display: grid;
+            grid-template-columns: 120px 1fr 60px;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .dark-mode .patient-progress-row {
+            border-bottom-color: rgba(255, 255, 255, 0.04);
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .dark-mode .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .alert-item {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .dark-mode .alert-item {
+            border-bottom-color: rgba(255, 255, 255, 0.04);
+        }
+
+        .alert-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .btn-action {
+            background: var(--emerald-glow);
+            color: var(--emerald2);
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            text-align: center;
+            border: 1px solid rgba(0, 200, 150, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: rgba(0, 200, 150, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .consult-card {
+            background: var(--bg);
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .dark-mode .consult-card {
+            border-color: rgba(255, 255, 255, 0.05);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .dark-mode .avatar {
+            background: rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-gray-800 transition-colors duration-300">
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="min-h-screen grid grid-cols-1 lg:grid-cols-12 overflow-hidden text-left">
+        <!-- Left Banner -->
+        <div class="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-emerald-600 to-[#10b981] text-white p-12 flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-80 h-80 bg-emerald-500 rounded-full blur-3xl opacity-20 -mr-16 -mt-16"></div>
+            <div class="absolute bottom-0 left-0 w-80 h-80 bg-blue-500 rounded-full blur-3xl opacity-15 -ml-20 -mb-20"></div>
+            
+            <div class="relative z-10">
+                <span class="font-mono text-xs tracking-wider uppercase bg-white/10 px-3 py-1.5 rounded-full border border-white/10 text-white font-bold inline-block">
+                    SAAS NUTRIÇÃO CLÍNICA
+                </span>
+                <div class="mt-10">
+                    <h1 class="font-serif text-5xl font-black leading-tight tracking-tight drop-shadow-sm select-none">
+                        NUTRA
+                    </h1>
+                    <p class="text-xs font-mono font-medium tracking-widest text-emerald-200 mt-1 uppercase">
+                        Ciência com Elegância (Autônomo)
+                    </p>
+                </div>
+            </div>
+
+            <div class="relative z-10 max-w-sm space-y-4">
+                <p class="font-serif text-xl italic font-semibold leading-relaxed text-emerald-50">
+                    "Uma ferramenta de alto padrão projetada para médicos nutrólogos que priorizam a precisão e buscam fidelizar pacientes de alta performance."
+                </p>
+                <div>
+                    <strong class="block text-sm font-bold">Dr. Alexandre Silva</strong>
+                    <span class="text-xs text-emerald-250">Embaixador NUTRA & Nutrólogo Esportivo</span>
+                </div>
+            </div>
+
+            <div class="relative z-10 text-xs text-emerald-100 font-mono font-medium">
+                NUTRA © 2026 · Versão Offline HTML5 Autônoma
+            </div>
+        </div>
+
+        <!-- Right Login Panel -->
+        <div class="col-span-1 lg:col-span-7 flex flex-col justify-center px-6 md:px-14 py-12 relative bg-white dark:bg-[#0D1117]">
+            <div class="absolute top-6 right-6 flex items-center gap-2">
+                <button onclick="toggleDarkMode()" class="p-2 bg-gray-100 dark:bg-gray-800 rounded-xl text-gray-500 hover:text-gray-800 dark:hover:text-white transition-all">
+                    🌓 Escuro/Claro
+                </button>
+            </div>
+
+            <div class="max-w-md w-full mx-auto space-y-8 text-left">
+                <div>
+                    <span class="text-emerald-500 font-serif text-2xl font-black tracking-tight lg:hidden">NUTRA</span>
+                    <h2 class="font-serif text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
+                        Bem-vindo à medicina de precisão
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-1.5">Escolha seu perfil técnico abaixo para entrar no sistema operacional clínico</p>
+                </div>
+
+                <!-- Profile Picker Tab -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" id="role-medico-btn" onclick="setLoginRole('medico')" class="p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wide transition-all border-[#00C896] bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500">
+                        🩺 Médico / Nutrólogo
+                    </button>
+                    <button type="button" id="role-paciente-btn" onclick="setLoginRole('paciente')" class="p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wide transition-all bg-gray-50/50 dark:bg-gray-900/50 border-gray-200 dark:border-gray-800 text-gray-500 font-sans">
+                        👤 Paciente Atendido
+                    </button>
+                </div>
+
+                <!-- Simulated Form -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-1.5">E-mail Cadastrado</label>
+                        <input id="email-field" type="email" value="dr@nutra.com" class="w-full bg-gray-50 dark:bg-gray-900 border-none rounded-xl px-4 py-2.5 text-xs md:text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none ring-1 ring-gray-200 dark:ring-gray-800 focus:ring-[#00C896] transition-all">
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1.5">
+                            <label class="block text-[10px] uppercase font-bold text-gray-400 tracking-wider">Senha de Segurança</label>
+                            <span class="text-[10px] text-gray-400 cursor-pointer">Esqueceu?</span>
+                        </div>
+                        <input type="password" value="demo" class="w-full bg-gray-50 dark:bg-gray-900 border-none rounded-xl px-4 py-2.5 text-xs md:text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none ring-1 ring-gray-200 dark:ring-gray-800 focus:ring-[#00C896] transition-all">
+                    </div>
+
+                    <button onclick="handleLogin()" class="w-full bg-[#00C896] text-white font-bold rounded-xl py-3 text-xs md:text-sm tracking-wide hover:bg-emerald-600 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        Acessar Plataforma Técnica
+                    </button>
+                </div>
+
+                <div class="pt-4 border-t border-gray-100 dark:border-gray-800">
+                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-3 text-center font-mono">Acesso Rápido de Demonstração</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="bypassLogin('medico')" class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs py-2 rounded-lg font-bold hover:bg-gray-205 dark:hover:bg-gray-700">🩺 Doutor</button>
+                        <button onclick="bypassLogin('paciente')" class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs py-2 rounded-lg font-bold hover:bg-gray-205 dark:hover:bg-gray-700">👤 Paciente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP STRUCTURE (HIDDEN INITIALLY) -->
+    <div id="app-screen" class="hidden min-h-screen flex flex-col bg-[#F8F9FC] dark:bg-[#0D1117] text-gray-800 dark:text-gray-100">
+        
+        <!-- HEADER -->
+        <header class="sticky top-0 z-40 bg-white/75 dark:bg-[#161B27]/75 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-2.5 cursor-pointer" onclick="goHome()">
+                    <span class="w-8 h-8 rounded-lg bg-[#00C896] flex items-center justify-center text-white font-bold">N</span>
+                    <div class="text-left">
+                        <h1 class="font-serif text-base font-black tracking-tight leading-none">NUTRA</h1>
+                        <span class="text-[9px] text-gray-400 tracking-widest font-mono uppercase block mt-0.5">STANDALONE OFFLINE</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span id="role-badge" class="text-[10px] font-mono text-gray-400 uppercase bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 px-2.5 py-1 rounded">
+                        MÉDICO
+                    </span>
+                    <button onclick="toggleDarkMode()" class="p-2 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 text-gray-500">
+                        🌓
+                    </button>
+                    <button onclick="logout()" class="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-xl text-red-500 text-xs font-bold px-3">
+                        Sair
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT WRAPPER -->
+        <div class="max-w-7xl w-full mx-auto px-4 md:px-6 py-6 pb-24 flex-1">
+            
+            <!-- DOCTOR SYSTEM -->
+            <div id="doctor-system" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 text-left">
+                <!-- Sidebar -->
+                <aside class="lg:col-span-3 space-y-1 bg-white dark:bg-[#161B27] p-3 rounded-xl border border-black/[0.06] dark:border-white/[0.08] shadow-sm">
+                    <div class="pb-2.5 border-b border-black/[0.04] dark:border-white/[0.05] mb-2.5 ml-1.5 flex items-center justify-between">
+                        <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Apoio Clínico</span>
+                        <span class="text-[9px] text-[#00C896] bg-[#00C896]/10 px-1.5 py-0.5 rounded font-extrabold uppercase">ATIVO</span>
+                    </div>
+
+                    <button onclick="switchDoctorTab('dashboard')" id="tab-dashboard" class="w-full text-left font-bold text-[11px] py-1.5 px-3 rounded-lg transition-all uppercase tracking-wider flex items-center gap-2 bg-emerald-500/10 text-emerald-500 border-r-[3px] border-emerald-500 rounded-r-none">
+                        📊 Geral Dashboard
+                    </button>
+                    <button onclick="switchDoctorTab('pacientes')" id="tab-pacientes" class="w-full text-left font-bold text-[11px] py-1.5 px-3 rounded-lg transition-all uppercase tracking-wider flex items-center gap-2 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        👥 Pacientes Clínicos
+                    </button>
+                    <button onclick="switchDoctorTab('protocolo')" id="tab-protocolo" class="w-full text-left font-bold text-[11px] py-1.5 px-3 rounded-lg transition-all uppercase tracking-wider flex items-center gap-2 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        📋 Novo Protocolo
+                    </button>
+                    <button onclick="switchDoctorTab('agenda')" id="tab-agenda" class="w-full text-left font-bold text-[11px] py-1.5 px-3 rounded-lg transition-all uppercase tracking-wider flex items-center gap-2 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        📅 Agenda Consultas
+                    </button>
+                    <button onclick="switchDoctorTab('planos')" id="tab-planos" class="w-full text-left font-bold text-[11px] py-1.5 px-3 rounded-lg transition-all uppercase tracking-wider flex items-center gap-2 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        💳 Planos e SaaS
+                    </button>
+                </aside>
+
+                <!-- Content Area -->
+                <div class="lg:col-span-9 space-y-6">
+                    
+                    <!-- TAB: DASHBOARD -->
+                    <div id="doc-view-dashboard" class="space-y-6">
+                        <!-- KPI Row -->
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="kpi-card">
+                                <span class="kpi-label">Pacientes Ativos</span>
+                                <div class="kpi-value">48</div>
+                                <div class="text-[9px] text-gray-400 mt-1">✨ +2 esta semana</div>
+                            </div>
+                            <div class="kpi-card">
+                                <span class="kpi-label">Consultas Hoje</span>
+                                <div class="kpi-value !text-amber-500">06</div>
+                                <div class="text-[9px] text-gray-400 mt-1">Próxima em 30 min</div>
+                            </div>
+                            <div class="kpi-card">
+                                <span class="kpi-label">Protocolos Ativos</span>
+                                <div class="kpi-value">43</div>
+                                <div class="text-[9px] text-gray-400 mt-1">94% taxa de prescrição</div>
+                            </div>
+                            <div class="kpi-card">
+                                <span class="kpi-label">Adesão Média</span>
+                                <div class="kpi-value">78%</div>
+                                <div class="text-[9px] text-gray-400 mt-1">Taxa geral consultório</div>
+                            </div>
+                        </div>
+
+                        <!-- Main Grid -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Left Card (Adesão) -->
+                            <div class="section-card lg:col-span-2 space-y-4">
+                                <div class="section-title">
+                                    <span>Adesão ao Protocolo</span>
+                                    <span class="text-xs font-normal text-gray-450 font-mono">Prontuário Rápido</span>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <div class="patient-progress-row cursor-pointer hover:bg-gray-55 dark:hover:bg-gray-800/40 p-1 rounded" onclick="viewDetailedPatient('Ana Costa')">
+                                        <span class="font-medium text-xs">Ana Costa</span>
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill bg-amber-500" style="width: 68%;"></div></div>
+                                        <span class="font-mono text-xs text-right">68%</span>
+                                    </div>
+                                    <div class="patient-progress-row cursor-pointer" onclick="viewDetailedPatient('Fernanda Rocha')">
+                                        <span class="font-medium text-xs">Fernanda Rocha</span>
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill bg-[#00C896]" style="width: 85%;"></div></div>
+                                        <span class="font-mono text-xs text-right">85%</span>
+                                    </div>
+                                    <div class="patient-progress-row cursor-pointer" onclick="viewDetailedPatient('Roberto Alves')">
+                                        <span class="font-medium text-xs">Roberto Alves</span>
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill bg-[#00C896]" style="width: 72%;"></div></div>
+                                        <span class="font-mono text-xs text-right">72%</span>
+                                    </div>
+                                    <div class="patient-progress-row cursor-pointer" onclick="viewDetailedPatient('Maria Santos')">
+                                        <span class="font-medium text-xs">Maria Santos</span>
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill bg-[#00C896]" style="width: 91%;"></div></div>
+                                        <span class="font-mono text-xs text-right">91%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Alerts -->
+                            <div class="section-card space-y-3">
+                                <span class="font-serif text-sm font-bold text-red-500">⚠️ Alertas Críticos</span>
+                                <div class="space-y-2">
+                                    <div class="alert-item">
+                                        <div class="alert-indicator bg-red-500"></div>
+                                        <div>
+                                            <div class="text-xs font-bold text-gray-800 dark:text-gray-150 font-sans">João Pereira</div>
+                                            <div class="text-[10px] text-gray-400 font-sans">Sem registros diários há 8 dias</div>
+                                        </div>
+                                    </div>
+                                    <div class="alert-item">
+                                        <div class="alert-indicator bg-amber-500"></div>
+                                        <div>
+                                            <div class="text-xs font-bold text-gray-800 dark:text-gray-150 font-sans">Ana Costa</div>
+                                            <div class="text-[10px] text-gray-400 font-sans">Nutrição desregulada nos carboidratos</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Next Agenda -->
+                        <div class="section-card">
+                            <h3 class="section-title">Próximas Consultas de Hoje</h3>
+                            <div class="space-y-2">
+                                <div class="consult-card">
+                                    <div class="avatar bg-emerald-100 text-emerald-800 font-bold">AC</div>
+                                    <div class="text-left font-sans">
+                                        <div class="text-xs font-bold text-gray-900 dark:text-white-0 border-none">Ana Costa</div>
+                                        <div class="text-[10px] text-gray-400 mt-1">14:00 · Teleconsulta Médica</div>
+                                    </div>
+                                    <button class="ml-auto bg-[#00C896] text-white text-[10px] uppercase tracking-wider font-bold rounded px-3.5 py-1.5 hover:bg-emerald-600 font-sans" onclick="viewDetailedPatient('Ana Costa')">Atender</button>
+                                </div>
+                                <div class="consult-card font-sans">
+                                    <div class="avatar bg-blue-100 text-blue-800 font-bold">CL</div>
+                                    <div class="text-left">
+                                        <div class="text-xs font-bold text-gray-900 dark:text-white">Carlos Lima</div>
+                                        <div class="text-[10px] text-gray-400 mt-1">15:30 · Consulta Presencial</div>
+                                    </div>
+                                    <span class="ml-auto text-[10px] text-gray-400 italic">Presencial</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- TAB: PACIENTES -->
+                    <div id="doc-view-pacientes" class="hidden space-y-6">
+                        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                            <h3 class="font-serif text-xl font-bold">Fichas e Prontuários</h3>
+                            <button onclick="openAddPatientModal()" class="bg-[#00C896] hover:bg-emerald-600 text-white font-bold text-xs py-2 px-4 rounded-xl">+ Novo Paciente</button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="patients-list-cards">
+                            <!-- Interactive patient list renders here -->
+                        </div>
+
+                        <!-- Selected Patient Detailed Inspector -->
+                        <div id="patient-inspector-box" class="hidden bg-white dark:bg-[#161B27] border border-black/[0.05] dark:border-white/[0.08] rounded-xl p-5 space-y-6">
+                            <div class="flex items-center justify-between border-b border-gray-105 dark:border-gray-800 pb-3">
+                                <div>
+                                    <span id="insp-gender" class="text-[9px] uppercase font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">Feminino</span>
+                                    <h4 id="insp-nome" class="font-serif text-xl font-extrabold text-gray-900 dark:text-gray-100 mt-1">Ana Costa</h4>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] text-gray-400 block uppercase">Último Registro</span>
+                                    <strong id="insp-status" class="text-xs block text-emerald-500">Ativa · Hoje</strong>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                                <div class="bg-gray-50/50 dark:bg-gray-900/50 p-2.5 rounded-lg">
+                                    <span class="text-gray-400 block text-[9px] uppercase">Objetivo</span>
+                                    <strong id="insp-objetivo" class="font-medium text-gray-800 dark:text-gray-200">Definição Muscular</strong>
+                                </div>
+                                <div class="bg-gray-50/50 dark:bg-gray-900/50 p-2.5 rounded-lg">
+                                    <span class="text-gray-400 block text-[9px] uppercase">Idade</span>
+                                    <strong id="insp-idade" class="font-medium text-gray-800 dark:text-gray-200">26 anos</strong>
+                                </div>
+                                <div class="bg-gray-50/50 dark:bg-gray-900/50 p-2.5 rounded-lg">
+                                    <span class="text-gray-400 block text-[9px] uppercase">Peso Atual/Meta</span>
+                                    <strong id="insp-pesos" class="font-medium text-gray-800 dark:text-gray-200">62 kg / 58 kg</strong>
+                                </div>
+                                <div class="bg-gray-50/50 dark:bg-gray-900/50 p-2.5 rounded-lg">
+                                    <span class="text-gray-400 block text-[9px] uppercase">Adesão Acumulada</span>
+                                    <strong id="insp-adesao-percent" class="font-mono text-emerald-500 font-bold">68%</strong>
+                                </div>
+                            </div>
+
+                            <!-- Mock exam indicators -->
+                            <div class="space-y-3">
+                                <span class="font-serif text-sm font-bold block">Acompanhamento de Micronutrientes</span>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div class="p-3 border border-gray-100 dark:border-gray-800 rounded-lg bg-gray-50/50 dark:bg-gray-900/10">
+                                        <div class="flex justify-between text-xs text-gray-500">
+                                            <span>Vitamina D3</span>
+                                            <span class="font-bold text-amber-500 font-sans">Baixo</span>
+                                        </div>
+                                        <div class="text-xs font-bold text-gray-850 dark:text-gray-200 mt-1">22 ng/mL</div>
+                                        <div class="text-[9px] text-gray-400 mt-0.5 font-sans">Meta: > 40 ng/mL</div>
+                                    </div>
+                                    <div class="p-3 border border-gray-100 dark:border-gray-800 rounded-lg bg-gray-50/50 dark:bg-gray-900/10">
+                                        <div class="flex justify-between text-xs text-gray-500 font-sans">
+                                            <span>B12 Ativa</span>
+                                            <span class="font-bold text-emerald-500">Normal</span>
+                                        </div>
+                                        <div class="text-xs font-bold text-gray-850 dark:text-gray-200 mt-1">450 pg/mL</div>
+                                        <div class="text-[9px] text-gray-400 mt-0.5">Sob suplementação</div>
+                                    </div>
+                                    <div class="p-3 border border-gray-100 dark:border-gray-800 rounded-lg bg-gray-50/50 dark:bg-gray-900/10">
+                                        <div class="flex justify-between text-xs text-gray-500 font-sans">
+                                            <span>Ferritina Sérica</span>
+                                            <span class="font-bold text-orange-500">Alerta</span>
+                                        </div>
+                                        <div class="text-xs font-bold text-gray-850 dark:text-gray-200 mt-1">32 ng/mL</div>
+                                        <div class="text-[9px] text-gray-400 mt-0.5">Otimizar absorção ferro</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Direct prescription print layout -->
+                            <div class="p-4 border border-emerald-500/10 bg-emerald-500/[0.02] rounded-xl space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-black uppercase text-emerald-500 font-mono">📋 SUPLEMENTAÇÃO ATIVA DO PROTOCOLO</span>
+                                    <button class="bg-[#00C896] text-white text-[10px] font-bold px-3 py-1 rounded" onclick="printPrescription()">Imprimir Receita</button>
+                                </div>
+                                <div class="space-y-2 text-xs text-left" id="supplements-prescription-container">
+                                    <!-- Supplement list -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: PROTOCOLO -->
+                    <div id="doc-view-protocolo" class="hidden space-y-6">
+                        <div class="section-card space-y-4">
+                            <h3 class="font-serif text-lg font-bold">Criar Novo Protocolo de Precisão</h3>
+                            <p class="text-xs text-gray-400">Configure as calorias, relação de macronutrientes, suplementos ativos e exames laboratoriais recomendados.</p>
+                            
+                            <div class="space-y-4 pt-2 font-sans text-xs">
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-2">Meta Diária de Calorias</label>
+                                    <input type="range" min="1500" max="4000" step="100" value="2200" id="calories-slider" oninput="updateCalLabel(this.value)" class="w-full accent-[#00C896]">
+                                    <span id="calories-label" class="text-xs font-mono font-bold text-[#00C896]">2200 kcal</span>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-3 font-sans">
+                                    <div>
+                                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Proteínas (%)</label>
+                                        <input type="number" id="macro-prot" value="35" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-2 rounded-lg text-xs font-mono">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Carbos (%)</label>
+                                        <input type="number" id="macro-carb" value="40" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-2 rounded-lg text-xs font-mono">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Gorduras (%)</label>
+                                        <input type="number" id="macro-gord" value="25" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-2 rounded-lg text-xs font-mono">
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-gray-100 dark:border-gray-800 pt-3">
+                                    <label class="block text-[10px] uppercase font-bold text-gray-400 mb-2">Orientações de Suplementação</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="new-supp-name" placeholder="Vitamin C" class="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 px-3 py-2 text-xs rounded-lg">
+                                        <input type="text" id="new-supp-dose" placeholder="500 mg" class="w-24 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 px-3 py-2 text-xs rounded-lg">
+                                        <button onclick="addSupplement()" class="bg-[#00C896] text-white px-4 text-xs font-bold rounded-lg">+</button>
+                                    </div>
+                                    <div id="supplement-list-builder" class="mt-2.5 space-y-1.5 max-h-36 overflow-y-auto font-sans">
+                                        <!-- Real supplementary items listed here -->
+                                        <div class="flex justify-between items-center text-xs p-2 bg-gray-50 dark:bg-gray-900 rounded"><span>Vitamina D3 - 2000 UI (Manhã)</span> <span class="text-red-500 cursor-pointer">remover</span></div>
+                                        <div class="flex justify-between items-center text-xs p-2 bg-gray-50 dark:bg-gray-900 rounded"><span>Coenzima Q10 - 100 mg (Almoço)</span> <span class="text-red-500 cursor-pointer">remover</span></div>
+                                    </div>
+                                </div>
+
+                                <button onclick="saveNewProtocol()" class="w-full bg-[#00C896] hover:bg-emerald-600 text-white font-bold py-2.5 text-xs uppercase tracking-wider rounded-xl">Gravar Protocolo no Banco</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: AGENDA -->
+                    <div id="doc-view-agenda" class="hidden space-y-6">
+                        <div class="section-card space-y-4">
+                            <h3 class="font-serif text-lg font-bold">Consultas e Agendamentos Técnicos</h3>
+                            <div class="space-y-2 font-sans text-xs" id="agenda-appointments-container">
+                                <!-- Calendar -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: PLANOS -->
+                    <div id="doc-view-planos" class="hidden space-y-6">
+                        <div class="text-center max-w-xl mx-auto space-y-2 py-4">
+                            <span class="text-[10px] uppercase font-bold text-[#00C896] tracking-widest bg-emerald-500/10 px-3 py-1.5 rounded-full inline-block">Plataforma SaaS Premium</span>
+                            <h2 class="font-serif text-2xl md:text-3xl font-black">Planos de Assinatura para Médicos</h2>
+                            <p class="text-xs text-gray-400">Escaneie e selecione o plano de apoio adequado ao volume de pacientes em seu consultório. Suporte técnico premium garantido de alto nível.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                            <!-- Solo -->
+                            <div class="bg-white dark:bg-[#161B27] rounded-xl p-6 border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
+                                <div>
+                                    <span class="text-xs uppercase text-gray-400 font-bold block">Solo</span>
+                                    <strong class="font-serif text-2xl font-bold block mt-1">R$ 197 <span class="text-xs font-sans text-gray-400">/mês</span></strong>
+                                    <p class="text-xs text-gray-500 mt-2">Profissionais em início particular.</p>
+                                    <ul class="space-y-3 mt-6 text-xs text-gray-650 dark:text-gray-300">
+                                        <li>✓ Até 30 pacientes ativos</li>
+                                        <li>✓ Protocolos ilimitados</li>
+                                        <li>✓ Suporte em 24h úteis</li>
+                                    </ul>
+                                </div>
+                                <button class="mt-8 bg-gray-50 dark:bg-gray-800 py-2.5 rounded-xl text-xs font-bold font-sans cursor-pointer" onclick="alert('Plano Selecionado!')">Escolher Solo</button>
+                            </div>
+
+                            <!-- Clínica (Recomendado) -->
+                            <div class="bg-white dark:bg-[#161B27] rounded-xl p-6 border-2 border-[#00C896] relative flex flex-col justify-between shadow-md">
+                                <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#00C896] text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase">VIP ⭐</span>
+                                <div>
+                                    <span class="text-xs uppercase text-emerald-500 font-bold block animate-bounce">Clínica</span>
+                                    <strong class="font-serif text-3xl font-black block mt-1">R$ 397 <span class="text-xs font-sans text-gray-400">/mês</span></strong>
+                                    <p class="text-xs text-gray-500 mt-2">Para consultórios de alto fluxo.</p>
+                                    <ul class="space-y-3 mt-6 text-xs text-gray-650 dark:text-gray-300 font-semibold">
+                                        <li>✓ Pacientes ILIMITADOS</li>
+                                        <li>✓ Até 3 médicos credenciados</li>
+                                        <li>✓ Suporte técnico prioritário</li>
+                                    </ul>
+                                </div>
+                                <button class="mt-8 bg-[#00C896] text-white py-2.5 rounded-xl text-xs font-bold font-sans cursor-pointer" onclick="alert('Plano Clínica Selecionado!')">Contratar Clínica</button>
+                            </div>
+
+                            <!-- Premium -->
+                            <div class="bg-white dark:bg-[#161B27] rounded-xl p-6 border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
+                                <div>
+                                    <span class="text-xs uppercase text-gray-400 font-bold block">Premium</span>
+                                    <strong class="font-serif text-2xl font-bold block mt-1">R$ 697 <span class="text-xs font-sans text-gray-400">/mês</span></strong>
+                                    <p class="text-xs text-gray-500 mt-2">Clínicas com marca própria.</p>
+                                    <ul class="space-y-3 mt-6 text-xs text-gray-650 dark:text-gray-300">
+                                        <li>✓ Tudo de Clínica</li>
+                                        <li>✓ White Label personalizado</li>
+                                        <li>✓ Suporte VIP 24h</li>
+                                    </ul>
+                                </div>
+                                <button class="mt-8 bg-gray-50 dark:bg-gray-800 py-2.5 rounded-xl text-xs font-bold font-sans cursor-pointer" onclick="alert('Consulte via contato@nutra.com.br')">Falar Vendas</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- PATIENT SYSTEM -->
+            <div id="patient-system" class="hidden space-y-6 text-left max-w-lg mx-auto">
+                
+                <!-- STICKY HEADER SUMMARY CARD -->
+                <div class="section-card bg-gradient-to-br from-[#161B27] to-[#0D1117] text-white border-none p-5 space-y-4 relative overflow-hidden shadow-xl">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl font-sans"></div>
+                    <div>
+                        <span class="text-[9px] font-mono tracking-widest text-[#00C896] uppercase bg-[#00C896]/10 px-2 py-0.5 rounded">Ana Costa</span>
+                        <h2 class="font-serif text-xl font-bold mt-1">Sua Adesão: 68%</h2>
+                        <p class="text-[10px] text-gray-450">Último registro hoje às 08:30</p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2.5 pt-2">
+                        <div class="bg-white/5 p-2 rounded-lg text-center">
+                            <span class="block text-[8px] text-gray-400 uppercase">Streak</span>
+                            <strong class="text-sm text-emerald-400 font-mono">🔥 4 dias</strong>
+                        </div>
+                        <div class="bg-white/5 p-2 rounded-lg text-center font-sans">
+                            <span class="block text-[8px] text-gray-400 uppercase">Calorias</span>
+                            <strong class="text-sm text-amber-400 font-mono">1.8K/2.0K</strong>
+                        </div>
+                        <div class="bg-white/5 p-2 rounded-lg text-center">
+                            <span class="block text-[8px] text-gray-400 uppercase">Peso Alvo</span>
+                            <strong class="text-sm text-blue-400 font-mono">58.0 kg</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PATIENT TAB SYSTEM switcher -->
+                <div class="grid grid-cols-4 bg-white dark:bg-[#161B27] rounded-xl p-1.5 border border-black/[0.05] dark:border-white/[0.08] text-xs font-bold text-center">
+                    <button onclick="switchPatientTab('inicio')" id="p-tab-inicio" class="py-2.5 rounded-lg text-emerald-500 bg-emerald-500/5 font-sans">Início</button>
+                    <button onclick="switchPatientTab('protocolo')" id="p-tab-protocolo" class="py-2.5 rounded-lg text-gray-500 font-sans">Protocolo</button>
+                    <button onclick="switchPatientTab('historial')" id="p-tab-historial" class="py-2.5 rounded-lg text-gray-500 font-sans">Log</button>
+                    <button onclick="switchPatientTab('chat')" id="p-tab-chat" class="py-2.5 rounded-lg text-gray-500 font-sans font-sans">Chat 💬</button>
+                </div>
+
+                <!-- PATIENT CLIENT TAB: INICIO -->
+                <div id="p-view-inicio" class="space-y-4">
+                    <div class="section-card space-y-3 font-sans text-xs">
+                        <span class="text-xs uppercase font-extrabold tracking-wider text-gray-400">Exames Recomendados (Nutrólogo)</span>
+                        <div class="p-3 bg-red-500/5 text-red-500 border border-red-500/10 rounded-lg flex items-center justify-between">
+                            <span class="font-medium">Vitamina D3 em nível crítico (22 ng/mL)</span>
+                            <strong class="uppercase text-[9px] tracking-wider text-red-650 bg-red-500/10 px-1.5 py-0.5 rounded">Importante</strong>
+                        </div>
+                    </div>
+
+                    <div class="section-card space-y-3 font-sans text-xs">
+                        <span class="text-xs uppercase font-extrabold tracking-wider text-gray-400">Rotina de Atividades</span>
+                        <div class="text-xs text-gray-600 dark:text-gray-300">Frequência Física recomendada: <strong>3x por semana (Musculação)</strong></div>
+                    </div>
+                </div>
+
+                <!-- PATIENT CLIENT TAB: PROTOCOLO -->
+                <div id="p-view-protocolo" class="hidden space-y-4 font-sans text-xs">
+                    <div class="section-card space-y-3">
+                        <h4 class="font-serif text-base font-bold text-emerald-500">🌿 Suplementação Obrigatória</h4>
+                        <ul class="space-y-2 text-xs text-left">
+                            <li class="p-2 bg-gray-50 dark:bg-gray-900 rounded flex justify-between">
+                                <strong>Vitamina D3 - 2000 UI</strong>
+                                <span class="text-emerald-500 font-semibold text-right">Tirar de manhã com refeição</span>
+                            </li>
+                            <li class="p-2 bg-gray-50 dark:bg-gray-900 rounded flex justify-between">
+                                <strong>Ômega 3 - 1g</strong>
+                                <span class="text-emerald-500 font-semibold text-right max-w-xs block">Tomar no almoço Avançado</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- PATIENT CLIENT TAB: HISTORIAL -->
+                <div id="p-view-historial" class="hidden space-y-4">
+                    <div class="section-card space-y-3 font-sans">
+                        <span class="text-xs font-bold uppercase text-gray-400">Registros de Dieta e Treino</span>
+                        <div class="space-y-2" id="patient-logs-container">
+                            <!-- Real history of entries -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PATIENT CLIENT TAB: CHAT -->
+                <div id="p-view-chat" class="hidden space-y-4">
+                    <div class="section-card h-80 flex flex-col justify-between font-sans">
+                        <div class="flex-1 overflow-y-auto space-y-2 text-xs" id="chat-messages-container">
+                            <!-- Simulated logs -->
+                        </div>
+                        <div class="flex gap-2 pt-2 border-t border-gray-105 dark:border-gray-800">
+                            <input type="text" id="patient-chat-input" placeholder="Mensagem ao Dr. Silva..." class="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 text-xs px-3 py-2 rounded-lg">
+                            <button onclick="sendPatientMessage()" class="bg-[#00C896] text-white font-bold text-xs px-4 rounded-lg">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN JAVASCRIPT APP STATE -->
+    <script>
+        let state = {
+            darkMode: false,
+            isLoggedIn: false,
+            userRole: 'medico', // 'medico' | 'paciente'
+            currentDocTab: 'dashboard',
+            currentPatTab: 'inicio',
+            patients: [
+                { id: 1, nome: 'Ana Costa', idade: 26, objetivo: 'Definição Muscular', pesoAtual: 62, pesoMeta: 58, adesao: 68, status: 'ativo', genero: 'Feminino', supl: ['Vitamina D3 (2000 UI)', 'Ômega 3 (1g)'] },
+                { id: 2, nome: 'Fernanda Rocha', idade: 34, objetivo: 'Emagrecimento', pesoAtual: 75, pesoMeta: 63, adesao: 85, status: 'ativo', genero: 'Feminino', supl: ['Zinco quelato', 'Magnésio Pós-Treino'] },
+                { id: 3, nome: 'Roberto Alves', idade: 42, objetivo: 'Hipertrofia Músculo', pesoAtual: 88, pesoMeta: 92, adesao: 72, status: 'ativo', genero: 'Masculino', supl: ['Creatina 5g', 'Beta Alanina'] },
+                { id: 4, nome: 'Maria Santos', idade: 29, objetivo: 'Saúde Geral', pesoAtual: 64, pesoMeta: 63, adesao: 91, status: 'ativo', genero: 'Feminino', supl: ['Multivitamínico completo'] }
+            ],
+            selectedPatientIndex: 0
+        };
+
+        function toggleDarkMode() {
+            state.darkMode = !state.darkMode;
+            if (state.darkMode) {
+                document.documentElement.classList.add('dark');
+                document.body.classList.add('dark-mode');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        function setLoginRole(role) {
+            state.userRole = role;
+            const docBtn = document.getElementById('role-medico-btn');
+            const pacBtn = document.getElementById('role-paciente-btn');
+            const emailField = document.getElementById('email-field');
+
+            if (role === 'medico') {
+                docBtn.className = "p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wide transition-all border-[#00C896] bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500";
+                pacBtn.className = "p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wide transition-all bg-gray-50/50 dark:bg-gray-900/50 border-gray-200 dark:border-gray-800 text-gray-500";
+                emailField.value = "dr@nutra.com";
+            } else {
+                pacBtn.className = "p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wide transition-all border-[#00C896] bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500 animate-pulse";
+                docBtn.className = "p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wide transition-all bg-gray-50/50 dark:bg-gray-900/50 border-gray-200 dark:border-gray-800 text-gray-500";
+                emailField.value = "paciente@nutra.com";
+            }
+        }
+
+        function handleLogin() {
+            state.isLoggedIn = true;
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+
+            const badge = document.getElementById('role-badge');
+            if (state.userRole === 'medico') {
+                badge.innerText = 'PORTAL: DOUTOR SILVA 🩺';
+                document.getElementById('doctor-system').classList.remove('hidden');
+                document.getElementById('patient-system').classList.add('hidden');
+                switchDoctorTab('dashboard');
+                renderPatientsList();
+            } else {
+                badge.innerText = 'PORTAL: ANA COSTA 👤';
+                document.getElementById('patient-system').classList.remove('hidden');
+                document.getElementById('doctor-system').classList.add('hidden');
+                switchPatientTab('inicio');
+                updatePatientLogs();
+            }
+        }
+
+        function bypassLogin(role) {
+            setLoginRole(role);
+            handleLogin();
+        }
+
+        function logout() {
+            state.isLoggedIn = false;
+            document.getElementById('app-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function goHome() {
+            if (state.userRole === 'medico') {
+                switchDoctorTab('dashboard');
+            } else {
+                switchPatientTab('inicio');
+            }
+        }
+
+        // DOCTOR ACTIONS
+        function switchDoctorTab(tabId) {
+            state.currentDocTab = tabId;
+            const tabs = ['dashboard', 'pacientes', 'protocolo', 'agenda', 'planos'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('tab-' + t);
+                const view = document.getElementById('doc-view-' + t);
+                if (t === tabId) {
+                    btn.className = "w-full text-left font-bold text-[11px] py-1.5 px-3 rounded-lg transition-all uppercase tracking-wider flex items-center gap-2 bg-emerald-500/10 text-emerald-500 border-r-[3px] border-emerald-500 rounded-r-none";
+                    view.classList.remove('hidden');
+                } else {
+                    btn.className = "w-full text-left font-bold text-[11px] py-1.5 px-3 rounded-lg transition-all uppercase tracking-wider flex items-center gap-2 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800";
+                    view.classList.add('hidden');
+                }
+            });
+        }
+
+        // PATIENT ACTIONS
+        function switchPatientTab(tabId) {
+            state.currentPatTab = tabId;
+            const tabs = ['inicio', 'protocolo', 'historial', 'chat'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('p-tab-' + t);
+                const view = document.getElementById('p-view-' + t);
+                if (t === tabId) {
+                    btn.className = "py-2.5 rounded-lg text-emerald-500 bg-emerald-500/5";
+                    view.classList.remove('hidden');
+                } else {
+                    btn.className = "py-2.5 rounded-lg text-gray-500";
+                    view.classList.add('hidden');
+                }
+            });
+
+            if (tabId === 'chat') {
+                renderChat();
+            }
+        }
+
+        // RENDER CLINICAL PATIENTS
+        function renderPatientsList() {
+            const listContainer = document.getElementById('patients-list-cards');
+            listContainer.innerHTML = '';
+            
+            state.patients.forEach((pat, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-[#161B27] border border-black/[0.05] dark:border-white/[0.08] rounded-xl p-4 space-y-2 cursor-pointer hover:shadow-md transition-all";
+                card.onclick = () => showInspector(index);
+                card.innerHTML = \`
+                    <div class="flex justify-between items-start">
+                        <strong class="text-xs text-gray-800 dark:text-gray-150 block font-serif">\${pat.nome}</strong>
+                        <span class="text-[9px] px-1.5 py-0.5 rounded font-bold \${pat.status === 'ativo' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}" > Ativo </span >
+                    </div>
+                    <div class="flex justify-between text-[10px] text-gray-400">
+                        <span>Adesão</span>
+                        <strong class="font-mono text-emerald-500">\${pat.adesao}%</strong>
+                    </div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill bg-emerald-500" style="width: \${pat.adesao}%"></div></div>
+                \`;
+                listContainer.appendChild(card);
+            });
+        }
+
+        function showInspector(idx) {
+            state.selectedPatientIndex = idx;
+            const pat = state.patients[idx];
+            document.getElementById('patient-inspector-box').classList.remove('hidden');
+            
+            document.getElementById('insp-nome').innerText = pat.nome;
+            document.getElementById('insp-gender').innerText = pat.genero;
+            document.getElementById('insp-objetivo').innerText = pat.objetivo;
+            document.getElementById('insp-idade').innerText = pat.idade + " anos";
+            document.getElementById('insp-pesos').innerText = pat.pesoAtual + " kg / " + pat.pesoMeta + " kg";
+            document.getElementById('insp-adesao-percent').innerText = pat.adesao + "%";
+
+            // List supplements
+            const presBox = document.getElementById('supplements-prescription-container');
+            presBox.innerHTML = '';
+            pat.supl.forEach(s => {
+                presBox.innerHTML += \`<div class="flex items-center gap-2 p-1.5 bg-gray-50 dark:bg-gray-900 rounded"><span>💊</span><span>\${s}</span></div>\`;
+            });
+        }
+
+        function viewDetailedPatient(name) {
+            switchDoctorTab('pacientes');
+            const idx = state.patients.findIndex(p => p.nome === name);
+            if (idx !== -1) showInspector(idx);
+        }
+
+        // PROTOCOLO METADATA
+        function updateCalLabel(val) {
+            document.getElementById('calories-label').innerText = val + " kcal";
+        }
+
+        function addSupplement() {
+            const name = document.getElementById('new-supp-name').value;
+            const dose = document.getElementById('new-supp-dose').value;
+            if (!name) return;
+
+            const list = document.getElementById('supplement-list-builder');
+            const div = document.createElement('div');
+            div.className = "flex justify-between items-center text-xs p-2 bg-gray-50 dark:bg-gray-900 rounded";
+            div.innerHTML = \`<span>\${name} - \${dose}</span> <span class="text-red-500 cursor-pointer font-bold" onclick="this.parentNode.remove()">remover</span>\`;
+            list.appendChild(div);
+
+            document.getElementById('new-supp-name').value = '';
+            document.getElementById('new-supp-dose').value = '';
+        }
+
+        function saveNewProtocol() {
+            alert('Sucesso! Protocolo Clínico gravado e sincronizado no prontuário local.');
+        }
+
+        function printPrescription() {
+            alert('Gerando receita em formato PDF/Impressão. Impressora pronta!');
+        }
+
+        // PATIENT LOGS RENDER
+        function updatePatientLogs() {
+            const box = document.getElementById('patient-logs-container');
+            box.innerHTML = \`
+                <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg text-xs space-y-1">
+                    <div class="flex justify-between"><strong>Café da manhã - Ovos e Abacate</strong> <span class="text-emerald-500">✓ Concluído</span></div>
+                    <div class="text-[10px] text-gray-400">08:00 · Carboidratos controlados</div>
+                </div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg text-xs space-y-1 font-sans">
+                    <div class="flex justify-between"><strong>Almoço - Salada com Peixe</strong> <span class="text-emerald-500">✓ Concluído</span></div>
+                    <div class="text-[10px] text-gray-400">12:30 · Suplemento consumido</div>
+                </div>
+            \`;
+        }
+
+        // MESSAGES CHAT LOG
+        function renderChat() {
+            const chBox = document.getElementById('chat-messages-container');
+            chBox.innerHTML = \`
+                <div class="bg-gray-105 dark:bg-gray-800 p-2 rounded-lg max-w-[80%] text-left">
+                    <p class="font-bold text-[9px] text-[#00C896]">Dr. Alexandre Silva</p>
+                    <p>Ana, como se sente com a dose prescrita de Vitamina D3?</p>
+                </div>
+                <div class="bg-[#00C896]/10 p-2 rounded-lg max-w-[80%] ml-auto text-left">
+                    <p class="font-bold text-[9px] text-right text-emerald-500 font-sans">Você (Ana Costa)</p>
+                    <p>Me sinto bem melhor! Menos fadiga no treino da tarde.</p>
+                </div>
+            \`;
+        }
+
+        function sendPatientMessage() {
+            const val = document.getElementById('patient-chat-input').value;
+            if(!val) return;
+            const container = document.getElementById('chat-messages-container');
+            container.innerHTML += \`
+                <div class="bg-[#00C896]/10 p-2 rounded-lg max-w-[80%] ml-auto text-left font-sans">
+                    <p class="font-bold text-[9px] text-right text-emerald-500">Você (Ana Costa)</p>
+                    <p>\${val}</p>
+                </div>
+            \`;
+            document.getElementById('patient-chat-input').value = '';
+        }
+    </script>
+</body>
+</html>
