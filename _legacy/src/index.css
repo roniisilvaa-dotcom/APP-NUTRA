@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..905;1,400..905&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "DM Sans", "Inter", sans-serif;
+  --font-mono: "Space Mono", monospace;
+  
+  --color-emerald-500: #00C896;
+  --color-emerald-600: #00A67E;
+  --color-brand-emerald: #00C896;
+  --color-brand-emerald-glow: rgba(0, 200, 150, 0.08);
+  --color-brand-dark: #0D1117;
+  --color-brand-card: #FFFFFF;
+  --color-brand-card-dark: #161B27;
+  --color-brand-bg: #F8F9FC;
+}
+
+:root {
+  --bg: #F8F9FC;
+  --dark: #0D1117;
+  --card: #FFFFFF;
+  --emerald: #00C896;
+  --emerald2: #00A67E;
+  --emerald-glow: rgba(0, 200, 150, 0.08);
+  --blue: #4F8EF7;
+  --red: #FF4757;
+  --amber: #FFB830;
+  --text: #1A1D23;
+  --muted: rgba(26, 29, 35, 0.5);
+}
+
+/* Base style resets and beautiful typography layout */
+body {
+  background-color: var(--bg);
+  font-family: var(--font-sans);
+  color: var(--text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dark {
+  --bg: #0D1117;
+  --card: #161B27;
+  --text: #F3F4F6;
+  --muted: rgba(255, 255, 255, 0.5);
+}
+
+/* Beautiful custom high-density layout classes matching High Density design precisely */
+.kpi-card {
+  background: var(--card);
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.015);
+  transition: all 0.2s;
+}
+
+.dark .kpi-card {
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.kpi-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.75px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.kpi-value {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--emerald);
+}
+
+.section-card {
+  background: var(--card);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+}
+
+.dark .section-card {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.patient-progress-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 60px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.dark .patient-progress-row {
+  border-bottom-color: rgba(255, 255, 255, 0.04);
+}
+
+.progress-bar-bg {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.dark .progress-bar-bg {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.alert-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.dark .alert-item {
+  border-bottom-color: rgba(255, 255, 255, 0.04);
+}
+
+.alert-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.btn-action {
+  background: var(--emerald-glow);
+  color: var(--emerald2);
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  text-align: center;
+  border: 1px solid rgba(0, 200, 150, 0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-action:hover {
+  background: rgba(0, 200, 150, 0.15);
+  transform: translateY(-1px);
+}
+
+.consult-card {
+  background: var(--bg);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.dark .consult-card {
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.dark .avatar {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 200, 150, 0.15);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 200, 150, 0.35);
+}
