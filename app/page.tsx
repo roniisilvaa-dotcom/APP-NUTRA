@@ -4,6 +4,7 @@ import {
   FlaskConical, LineChart, Sparkles, FileClock, Stethoscope,
   Star, Quote, Zap, HeartPulse, ChevronDown,
 } from 'lucide-react'
+import PricingPlans from './components/PricingPlans'
 
 export const metadata = {
   title: 'NUTRA — Medicina Nutricional de Precisão para Nutrólogos',
@@ -39,7 +40,7 @@ export default function LandingPage() {
             <div className="flex items-center gap-3">
               <Link href="/login" className="hidden text-sm transition hover:text-white sm:block" style={{ color: '#9DB3AA' }}>Entrar</Link>
               <Link href="/register" className="rounded-full px-5 py-2.5 text-sm font-semibold transition hover:scale-[1.03]" style={{ background: `linear-gradient(92deg,#F4E2A8,${gold})`, color: '#07110D' }}>
-                Começar grátis
+                Teste grátis
               </Link>
             </div>
           </div>
@@ -62,7 +63,7 @@ export default function LandingPage() {
             </p>
             <div className="lp-up d4 mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/register" className="group inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base font-semibold transition hover:scale-[1.03]" style={{ background: `linear-gradient(92deg,#F4E2A8,${gold})`, color: '#07110D', boxShadow: '0 20px 50px -20px rgba(212,175,55,0.5)' }}>
-                Começar grátis agora
+                Testar grátis por 7 dias
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <a href="#planos" className="inline-flex items-center justify-center gap-2 rounded-full border px-7 py-4 text-base font-semibold transition hover:bg-white/5" style={{ borderColor: '#ffffff22', color: cream }}>
@@ -70,7 +71,7 @@ export default function LandingPage() {
               </a>
             </div>
             <div className="lp-up d5 mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono-data text-[11px] uppercase tracking-wider" style={{ color: '#6E857B' }}>
-              <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: emerald }} /> Grátis para começar</span>
+              <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: emerald }} /> 7 dias grátis</span>
               <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: emerald }} /> Sem cartão</span>
               <span className="flex items-center gap-1.5"><Lock className="h-3.5 w-3.5" style={{ color: emerald }} /> Dados no Brasil · LGPD</span>
             </div>
@@ -355,44 +356,11 @@ export default function LandingPage() {
           <div className="mb-14 text-center">
             <div className="font-mono-data text-[11px] uppercase tracking-[0.2em]" style={{ color: emerald }}>Planos</div>
             <h2 className="mt-3 font-serif-display text-[clamp(2rem,4vw,3rem)] font-semibold leading-tight tracking-tight">
-              Comece grátis. <span className="lux-gold-text">Cresça quando quiser.</span>
+              Investimento à altura <span className="lux-gold-text">da sua clínica.</span>
             </h2>
-            <p className="mt-3 text-lg" style={{ color: '#9DB3AA' }}>Sem cartão para começar. Cancele quando quiser.</p>
+            <p className="mt-3 text-lg" style={{ color: '#9DB3AA' }}>Teste grátis por 7 dias. Cancele quando quiser.</p>
           </div>
-          <div className="grid items-end gap-6 md:grid-cols-3">
-            {[
-              { name: 'Gratuito', price: 'R$0', per: '/mês', desc: 'Para testar a plataforma', feats: ['Até 3 pacientes', 'Antropometria e cálculos', 'App do paciente', 'Protocolos de suplementação'], cta: 'Começar grátis', hot: false },
-              { name: 'Clínica', price: 'R$397', per: '/mês', desc: 'Para clínicas em crescimento', feats: ['Até 30 pacientes', 'IA clínica (Gemini)', 'Chat médico-paciente', 'Relatórios PDF · Agenda', 'Até 3 médicos', 'Centro de dados LGPD'], cta: 'Assinar Clínica', hot: true },
-              { name: 'Advanced', price: 'R$797', per: '/mês', desc: 'Para grandes clínicas e grupos', feats: ['Pacientes ilimitados', 'Médicos ilimitados', 'API de integração', 'White-label', 'Onboarding dedicado', 'Suporte 24/7 · SLA'], cta: 'Assinar Advanced', hot: false },
-            ].map((p) => (
-              <div key={p.name} className={`lux-glass relative rounded-3xl p-7 ${p.hot ? '' : ''}`}
-                style={{ borderColor: p.hot ? '#D4AF3766' : undefined, boxShadow: p.hot ? '0 40px 80px -30px rgba(212,175,55,0.35)' : undefined, transform: p.hot ? 'scale(1.04)' : undefined, background: p.hot ? 'linear-gradient(160deg, rgba(212,175,55,0.08), rgba(255,255,255,0.02))' : undefined }}>
-                {p.hot && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 font-mono-data text-[10px] font-bold uppercase tracking-widest" style={{ background: `linear-gradient(92deg,#F4E2A8,${gold})`, color: '#07110D' }}>
-                    Mais popular
-                  </div>
-                )}
-                <h3 className="font-serif-display text-2xl font-semibold">{p.name}</h3>
-                <p className="mt-1 text-sm" style={{ color: '#7FA595' }}>{p.desc}</p>
-                <div className="mt-5 flex items-end gap-1">
-                  <span className={`font-serif-display text-5xl font-semibold ${p.hot ? 'lux-gold-text' : ''}`}>{p.price}</span>
-                  <span className="mb-1.5 text-sm" style={{ color: '#7FA595' }}>{p.per}</span>
-                </div>
-                <ul className="mt-6 space-y-2.5 text-sm">
-                  {p.feats.map((f) => (
-                    <li key={f} className="flex items-center gap-2.5">
-                      <Check className="h-4 w-4 flex-shrink-0" style={{ color: p.hot ? gold : emerald }} />
-                      <span style={{ color: '#D6E4DD' }}>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/register" className="mt-7 flex items-center justify-center gap-2 rounded-full px-5 py-3.5 text-sm font-semibold transition hover:scale-[1.02]"
-                  style={p.hot ? { background: `linear-gradient(92deg,#F4E2A8,${gold})`, color: '#07110D' } : { border: '1px solid #ffffff22', color: cream }}>
-                  {p.cta} <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            ))}
-          </div>
+          <PricingPlans />
         </section>
 
         {/* ===== FAQ ===== */}
@@ -433,10 +401,10 @@ export default function LandingPage() {
               <br /><span className="italic lux-gold-text">de outro nível.</span>
             </h2>
             <p className="relative mx-auto mt-5 max-w-lg text-lg" style={{ color: '#A9C2B8' }}>
-              Comece grátis hoje. Sem cartão, sem burocracia — só medicina nutricional de verdade.
+              Teste grátis por 7 dias. Sem cartão, sem burocracia — só medicina nutricional de verdade.
             </p>
             <Link href="/register" className="group relative mt-9 inline-flex items-center justify-center gap-2 rounded-full px-9 py-4 text-base font-semibold transition hover:scale-[1.03]" style={{ background: `linear-gradient(92deg,#F4E2A8,${gold})`, color: '#07110D', boxShadow: '0 20px 50px -20px rgba(212,175,55,0.5)' }}>
-              Criar conta gratuita
+              Começar teste grátis
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <p className="relative mt-4 font-mono-data text-[11px] uppercase tracking-wider" style={{ color: '#7FA595' }}>Leva menos de 2 minutos</p>
