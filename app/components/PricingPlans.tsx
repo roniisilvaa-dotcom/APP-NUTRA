@@ -139,7 +139,7 @@ export default function PricingPlans() {
       </div>
 
       <p className="mt-8 text-center font-mono-data text-[11px] uppercase tracking-wider" style={{ color: '#6E857B' }}>
-        7 dias grátis para testar · sem cartão · cancele quando quiser
+        Sem fidelidade · cancele quando quiser · suporte especializado
       </p>
     </div>
   )
