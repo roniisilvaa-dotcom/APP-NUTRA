@@ -57,3 +57,42 @@
 @media (prefers-reduced-motion: reduce) {
   .lp-up, .lp-in, .lp-float { animation: none; opacity: 1; }
 }
+
+/* ===== Landing — Dark Luxury Tech ===== */
+.lux-mesh {
+  background:
+    radial-gradient(closest-side at 18% 20%, rgba(16,185,129,0.18), transparent 70%),
+    radial-gradient(closest-side at 82% 12%, rgba(212,175,55,0.14), transparent 70%),
+    radial-gradient(closest-side at 70% 80%, rgba(16,185,129,0.10), transparent 70%),
+    #07110D;
+  background-size: 180% 180%, 160% 160%, 200% 200%, 100% 100%;
+  animation: luxMesh 22s ease-in-out infinite;
+}
+@keyframes luxMesh {
+  0%,100% { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
+  50% { background-position: 30% 20%, 70% 30%, 40% 70%, 0 0; }
+}
+.lux-grid::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+}
+.lux-glass {
+  background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.lux-gold-text {
+  background: linear-gradient(92deg, #F4E2A8 0%, #D4AF37 45%, #B8860B 70%, #F4E2A8 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.lux-hairline-gold { background: linear-gradient(90deg, transparent, #D4AF37, transparent); }
+.lux-card-hover { transition: transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s, border-color .4s; }
+.lux-card-hover:hover { transform: translateY(-6px); border-color: rgba(16,185,129,0.35); box-shadow: 0 30px 60px -25px rgba(16,185,129,0.25); }
+@keyframes luxShimmer { to { background-position: 200% center; } }
+.lux-shimmer { background-size: 200% auto; animation: luxShimmer 6s linear infinite; }
