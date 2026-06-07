@@ -26,6 +26,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         if (!user) return null
 
+        // Bloqueia membros desativados pelo ADM/desenvolvedor
+        if (user.ativo === false) return null
+
         const valid = await bcrypt.compare(credentials.password as string, user.passwordHash)
         if (!valid) return null
 

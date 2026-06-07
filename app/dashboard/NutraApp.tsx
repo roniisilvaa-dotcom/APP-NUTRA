@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { signOut } from 'next-auth/react'
 import {
   Sun, Moon, LogOut, Ruler, Shield, Plus, Clipboard, Activity, MessageSquare,
+  Users, Terminal,
 } from 'lucide-react'
 
 import { PACIENTES, PROTOCOLO_DEMO, AGENDA_DEMO, REGISTROS_DIARIOS_DEMO, MOCK_CHATS } from '@/src/demoData'
@@ -23,10 +24,11 @@ interface NutraUser {
 interface Props {
   user: NutraUser
   initialData: Record<string, unknown>
+  isDev?: boolean
 }
 
-export default function NutraApp({ user, initialData }: Props) {
-  const [darkMode, setDarkMode] = useState(false)
+export default function NutraApp({ user, initialData, isDev }: Props) {
+  const [darkMode, setDarkMode] = useState(true) // escuro por padrão (legibilidade + marca)
 
   const [patients, setPatients] = useState<Patient[]>(
     (initialData.patients as Patient[])?.length ? (initialData.patients as Patient[]) : PACIENTES
@@ -58,11 +60,18 @@ export default function NutraApp({ user, initialData }: Props) {
     setPatients((prev) => prev.map((x) => (x.id === p.id ? p : x)))
   }, [])
 
-  // Aplica/remove a classe .dark no <html> para o tema escuro
+  // Carrega preferência salva
+  useEffect(() => {
+    const saved = localStorage.getItem('nutra-theme')
+    if (saved) setDarkMode(saved === 'dark')
+  }, [])
+
+  // Aplica/remove a classe .dark no <html> e salva preferência
   useEffect(() => {
     const root = document.documentElement
     if (darkMode) root.classList.add('dark')
     else root.classList.remove('dark')
+    localStorage.setItem('nutra-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
 
   const navItem = (key: string, label: string, emoji: string, active: boolean) => (
@@ -89,7 +98,7 @@ export default function NutraApp({ user, initialData }: Props) {
   )
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-[#0D1117] text-gray-100' : 'bg-[#F8F9FC] text-gray-800'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-[#0A1410] text-gray-100' : 'bg-[#E7EBF1] text-gray-900'}`}>
       {/* HEADER */}
       <header className="sticky top-0 z-40 border-b border-black/[0.06] dark:border-white/[0.08] bg-white/80 dark:bg-[#0D1117]/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
@@ -108,10 +117,18 @@ export default function NutraApp({ user, initialData }: Props) {
                 <Link href="/dashboard/antropometria" className="p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-105 transition-all text-indigo-500" title="Avaliação Antropométrica">
                   <Ruler className="w-4 h-4" />
                 </Link>
+                <Link href="/dashboard/equipe" className="p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-105 transition-all text-violet-500" title="Equipe & Acessos (ADM)">
+                  <Users className="w-4 h-4" />
+                </Link>
                 <Link href="/dashboard/dados" className="p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-105 transition-all text-emerald-500" title="Centro de Controle de Dados (LGPD)">
                   <Shield className="w-4 h-4" />
                 </Link>
               </>
+            )}
+            {isDev && (
+              <Link href="/dashboard/dev" className="p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-105 transition-all text-amber-500" title="Painel do Desenvolvedor">
+                <Terminal className="w-4 h-4" />
+              </Link>
             )}
             <button onClick={() => setDarkMode(!darkMode)} className="p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-105 transition-all text-gray-500">
               {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
