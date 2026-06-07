@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { signOut } from 'next-auth/react'
 import {
   Sun, Moon, LogOut, Ruler, Shield, Plus, Clipboard, Activity, MessageSquare,
-  Users, Terminal,
+  Users, Terminal, Megaphone, Wallet,
 } from 'lucide-react'
 
 import { PACIENTES, PROTOCOLO_DEMO, AGENDA_DEMO, REGISTROS_DIARIOS_DEMO, MOCK_CHATS } from '@/src/demoData'
@@ -114,6 +114,15 @@ export default function NutraApp({ user, initialData, isDev }: Props) {
             </span>
             {user.role === 'medico' && (
               <>
+                <Link href="/dashboard/mensagens" className="p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-105 transition-all text-sky-500" title="Mensagens (chat privado)">
+                  <MessageSquare className="w-4 h-4" />
+                </Link>
+                <Link href="/dashboard/avisos" className="p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-105 transition-all text-amber-500" title="Mural de Avisos">
+                  <Megaphone className="w-4 h-4" />
+                </Link>
+                <Link href="/dashboard/financeiro" className="p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-105 transition-all text-emerald-400" title="Financeiro">
+                  <Wallet className="w-4 h-4" />
+                </Link>
                 <Link href="/dashboard/antropometria" className="p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:scale-105 transition-all text-indigo-500" title="Avaliação Antropométrica">
                   <Ruler className="w-4 h-4" />
                 </Link>
