@@ -2,6 +2,7 @@ import { auth } from '@/auth'
 import { db } from '@/lib/db'
 import { patients, protocols, consultas, diarioRegistros, chatMessages } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
+import { isSuperAdmin } from '@/lib/authz'
 import NutraApp from './NutraApp'
 
 export default async function DashboardPage() {
@@ -38,6 +39,7 @@ export default async function DashboardPage() {
     <NutraApp
       user={{ id: String(userId), name: session!.user.name, email: session!.user.email, role, plan: session!.user.plan }}
       initialData={initialData}
+      isDev={isSuperAdmin(session!.user.email)}
     />
   )
 }
