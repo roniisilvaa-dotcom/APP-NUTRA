@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import Link from 'next/link'
 import { signOut } from 'next-auth/react'
-import { Sun, Moon, LogOut } from 'lucide-react'
+import { Sun, Moon, LogOut, Ruler, Shield } from 'lucide-react'
 
 import { PACIENTES, PROTOCOLO_DEMO, AGENDA_DEMO, REGISTROS_DIARIOS_DEMO, MOCK_CHATS } from '@/src/demoData'
 import type { Patient, Protocol, Consulta, DiárioRegistro } from '@/src/types'
@@ -66,6 +67,24 @@ export default function NutraApp({ user, initialData }: Props) {
         <span className="text-xs text-gray-400 hidden sm:block">
           {user.name} · <span className="capitalize">{user.plan}</span>
         </span>
+        {user.role === 'medico' && (
+          <>
+            <Link
+              href="/dashboard/antropometria"
+              className="p-2.5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:scale-105 transition-all text-indigo-500"
+              title="Avaliação Antropométrica"
+            >
+              <Ruler className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/dashboard/dados"
+              className="p-2.5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:scale-105 transition-all text-emerald-500"
+              title="Centro de Controle de Dados (LGPD)"
+            >
+              <Shield className="w-4 h-4" />
+            </Link>
+          </>
+        )}
         <button
           onClick={() => setDarkMode(!darkMode)}
           className="p-2.5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:scale-105 transition-all text-gray-500"
