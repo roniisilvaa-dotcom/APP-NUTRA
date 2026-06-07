@@ -46,7 +46,7 @@ export default function RegisterPage() {
             </div>
             <span className="text-3xl font-bold text-white tracking-tight">NUTRA</span>
           </div>
-          <p className="text-emerald-300 text-sm">Crie sua conta gratuitamente</p>
+          <p className="text-emerald-300 text-sm">Crie sua conta e comece agora</p>
         </div>
 
         <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8">
@@ -143,7 +143,7 @@ export default function RegisterPage() {
               disabled={loading}
               className="w-full bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-white font-semibold rounded-xl py-3 transition"
             >
-              {loading ? 'Criando conta...' : 'Criar conta grátis'}
+              {loading ? 'Criando conta...' : 'Criar conta'}
             </button>
           </form>
 
