@@ -38,6 +38,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: user.email,
           role: user.role,
           plan: user.plan,
+          doctorId: user.doctorId ?? null,
+          permissions: user.permissions ?? {},
         }
       },
     }),
@@ -48,6 +50,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id
         token.role = (user as { role?: string }).role
         token.plan = (user as { plan?: string }).plan
+        token.doctorId = (user as { doctorId?: number | null }).doctorId ?? null
+        token.permissions = (user as { permissions?: Record<string, boolean> }).permissions ?? {}
       }
       return token
     },
@@ -56,6 +60,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id as string
         session.user.role = token.role as string
         session.user.plan = token.plan as string
+        ;(session.user as { doctorId?: number | null }).doctorId = (token.doctorId as number | null) ?? null
+        ;(session.user as { permissions?: Record<string, boolean> }).permissions = (token.permissions as Record<string, boolean>) ?? {}
       }
       return session
     },
