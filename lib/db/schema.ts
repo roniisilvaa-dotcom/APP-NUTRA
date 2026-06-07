@@ -1,12 +1,12 @@
 import { pgTable, serial, text, integer, real, boolean, timestamp, pgEnum, jsonb } from 'drizzle-orm/pg-core'
 
 // Enums
-export const roleEnum = pgEnum('role', ['medico', 'paciente'])
+export const roleEnum = pgEnum('role', ['medico', 'paciente', 'secretaria'])
 export const planEnum = pgEnum('plan', ['free', 'clinica', 'advanced'])
 export const statusEnum = pgEnum('patient_status', ['ativo', 'alerta', 'inativo'])
 export const consultaTypeEnum = pgEnum('consulta_type', ['Presencial', 'Online'])
 
-// Usuários (médicos e pacientes)
+// Usuários (médicos, pacientes e secretárias)
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
@@ -19,8 +19,31 @@ export const users = pgTable('users', {
   crm: text('crm'),
   especialidade: text('especialidade'),
   clinica: text('clinica'),
-  doctorId: integer('doctor_id'),  // para pacientes: id do médico responsável
+  doctorId: integer('doctor_id'),  // paciente/secretária: id do médico/clínica a que pertence
+  // Permissões (para secretária). Médico tem tudo. Ex.: {agenda:true, financeiro:true, pacientes:true, prontuario:false, mensagens:false}
+  permissions: jsonb('permissions').default({}),
+  ativo: boolean('ativo').default(true),
   createdAt: timestamp('created_at').defaultNow(),
+})
+
+// Notificações / avisos (médico → seus pacientes)
+export const notifications = pgTable('notifications', {
+  id: serial('id').primaryKey(),
+  doctorId: integer('doctor_id').notNull(),
+  autorId: integer('autor_id'),
+  titulo: text('titulo').notNull(),
+  corpo: text('corpo').notNull(),
+  publico: text('publico').default('todos_pacientes'), // todos_pacientes | paciente_especifico
+  patientId: integer('patient_id'),  // se direcionado a um paciente específico
+  createdAt: timestamp('created_at').defaultNow(),
+})
+
+// Estado de leitura das notificações por usuário
+export const notificationReads = pgTable('notification_reads', {
+  id: serial('id').primaryKey(),
+  notificationId: integer('notification_id').notNull(),
+  userId: integer('user_id').notNull(),
+  lidaEm: timestamp('lida_em').defaultNow(),
 })
 
 // Pacientes (dados clínicos vinculados ao user paciente e ao médico)

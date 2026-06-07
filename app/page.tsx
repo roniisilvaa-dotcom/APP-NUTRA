@@ -2,9 +2,10 @@ import Link from 'next/link'
 import {
   Activity, Shield, Brain, Ruler, ArrowRight, Check, X, Lock,
   FlaskConical, LineChart, Sparkles, FileClock, Stethoscope,
-  Star, Quote, Zap, HeartPulse, ChevronDown,
+  Star, Quote, Zap, HeartPulse, ChevronDown, Play,
 } from 'lucide-react'
 import PricingPlans from './components/PricingPlans'
+import ProductShowcase from './components/ProductShowcase'
 
 export const metadata = {
   title: 'NUTRA — Medicina Nutricional de Precisão para Nutrólogos',
@@ -32,6 +33,7 @@ export default function LandingPage() {
               <span className="font-serif-display text-xl font-semibold tracking-tight">NUTRA</span>
             </div>
             <div className="hidden items-center gap-9 text-sm md:flex" style={{ color: '#9DB3AA' }}>
+              <a href="#demo" className="transition hover:text-white">Ver o app</a>
               <a href="#plataforma" className="transition hover:text-white">Plataforma</a>
               <a href="#como" className="transition hover:text-white">Como funciona</a>
               <a href="#planos" className="transition hover:text-white">Planos</a>
@@ -66,8 +68,8 @@ export default function LandingPage() {
                 Começar agora
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
-              <a href="#planos" className="inline-flex items-center justify-center gap-2 rounded-full border px-7 py-4 text-base font-semibold transition hover:bg-white/5" style={{ borderColor: '#ffffff22', color: cream }}>
-                Ver planos
+              <a href="#demo" className="group inline-flex items-center justify-center gap-2 rounded-full border px-7 py-4 text-base font-semibold transition hover:bg-white/5" style={{ borderColor: '#ffffff22', color: cream }}>
+                <Play className="h-4 w-4" style={{ color: gold }} /> Ver o app em ação
               </a>
             </div>
             <div className="lp-up d5 mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono-data text-[11px] uppercase tracking-wider" style={{ color: '#6E857B' }}>
@@ -142,6 +144,9 @@ export default function LandingPage() {
             ))}
           </div>
         </section>
+
+        {/* ===== SHOWCASE / DEMO ===== */}
+        <ProductShowcase />
 
         {/* ===== DOR ===== */}
         <section className="mx-auto max-w-5xl px-6 py-24 text-center">
