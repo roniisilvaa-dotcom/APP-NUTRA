@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import InstallPWA from './components/InstallPWA'
+import StandaloneGuard from './components/StandaloneGuard'
 
 export const metadata: Metadata = {
   title: 'NUTRA — Medicina Nutricional de Precisão',
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pt-BR">
       <body>
         {children}
+        <StandaloneGuard />
         <InstallPWA />
       </body>
     </html>

@@ -14,7 +14,7 @@ interface Plan {
   name: string
   desc: string
   monthly: number
-  annual: number // total cobrado no ano (2 meses grátis)
+  annual: number // total cobrado no ano (12x o mensal)
   feats: string[]
   cta: string
   hot: boolean
@@ -25,7 +25,7 @@ const PLANS: Plan[] = [
     name: 'Essencial',
     desc: 'Para o consultório individual',
     monthly: 790,
-    annual: 7900,
+    annual: 9480,
     feats: ['Até 50 pacientes', 'Antropometria e cálculos', 'App do paciente', 'Protocolos e prontuário', 'Centro de dados LGPD'],
     cta: 'Começar agora',
     hot: false,
@@ -34,8 +34,8 @@ const PLANS: Plan[] = [
     name: 'Clínica',
     desc: 'Para clínicas em crescimento',
     monthly: 1490,
-    annual: 14900,
-    feats: ['Pacientes ilimitados', 'IA clínica (Gemini)', 'Chat médico-paciente', 'Relatórios PDF · Agenda', 'Até 5 profissionais', 'Suporte prioritário'],
+    annual: 17880,
+    feats: ['Pacientes ilimitados', 'IA clínica NUTRA CA.RO', 'Chat médico-paciente', 'Relatórios PDF · Agenda', 'Até 5 profissionais', 'Suporte prioritário'],
     cta: 'Assinar Clínica',
     hot: true,
   },
@@ -43,7 +43,7 @@ const PLANS: Plan[] = [
     name: 'Elite',
     desc: 'Para grupos e grandes clínicas',
     monthly: 2900,
-    annual: 29000,
+    annual: 34800,
     feats: ['Tudo do Clínica', 'Profissionais ilimitados', 'API de integração', 'White-label', 'Onboarding dedicado', 'Suporte 24/7 · SLA'],
     cta: 'Falar com vendas',
     hot: false,
@@ -70,12 +70,6 @@ export default function PricingPlans() {
                 : { color: '#9DB3AA' }}
             >
               {c === 'mensal' ? 'Mensal' : 'Anual'}
-              {c === 'anual' && (
-                <span className="ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-bold"
-                  style={cycle === 'anual' ? { background: '#07110D22', color: '#07110D' } : { background: '#10B98122', color: emerald }}>
-                  2 meses grátis
-                </span>
-              )}
             </button>
           ))}
         </div>
@@ -110,9 +104,7 @@ export default function PricingPlans() {
                 <span className="mb-1.5 text-sm" style={{ color: '#7FA595' }}>/mês</span>
               </div>
               <div className="mt-1.5 h-5 text-xs" style={{ color: '#7FA595' }}>
-                {cycle === 'anual'
-                  ? <>Cobrado R$ {fmt(p.annual)}/ano</>
-                  : <span style={{ color: emerald }}>No anual: R$ {fmt(Math.round(p.annual / 12))}/mês</span>}
+                {cycle === 'anual' ? <>Cobrado R$ {fmt(p.annual)}/ano</> : <>&nbsp;</>}
               </div>
 
               <ul className="mt-6 space-y-2.5 text-sm">
