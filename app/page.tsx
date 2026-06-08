@@ -2,7 +2,7 @@ import Link from 'next/link'
 import {
   Activity, Shield, Brain, Ruler, ArrowRight, Check, X, Lock,
   FlaskConical, LineChart, Sparkles, FileClock, Stethoscope,
-  Star, Quote, Zap, HeartPulse, ChevronDown, Play,
+  Zap, HeartPulse, ChevronDown, Play, Clock,
 } from 'lucide-react'
 import PricingPlans from './components/PricingPlans'
 import ProductShowcase from './components/ProductShowcase'
@@ -10,7 +10,7 @@ import ProductShowcase from './components/ProductShowcase'
 export const metadata = {
   title: 'NUTRA — Medicina Nutricional de Precisão para Nutrólogos',
   description:
-    'A plataforma clínica que transforma sua consulta em ciência. Antropometria de precisão, cálculo energético, IA clínica e controle de dados LGPD. Comece grátis, sem cartão.',
+    'A plataforma clínica que transforma sua consulta em ciência. Antropometria de precisão, cálculo energético, IA NUTRA CA.RO e controle de dados LGPD. Planos a partir de R$790/mês.',
 }
 
 const gold = '#D4AF37'
@@ -61,7 +61,7 @@ export default function LandingPage() {
               <br /><span className="italic lux-gold-text lux-shimmer">sem trabalhar mais</span>.
             </h1>
             <p className="lp-up d3 mt-6 max-w-md text-lg leading-relaxed" style={{ color: '#A9C2B8' }}>
-              O NUTRA reúne antropometria, cálculo energético, IA clínica e o app do paciente numa só plataforma. Precisão de elite — e o paciente sente a diferença na primeira consulta.
+              O NUTRA reúne antropometria, cálculo energético, a IA clínica NUTRA CA.RO e o app do paciente numa só plataforma. Precisão de elite — e o paciente sente a diferença na primeira consulta.
             </p>
             <div className="lp-up d4 mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/register" className="group inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base font-semibold transition hover:scale-[1.03]" style={{ background: `linear-gradient(92deg,#F4E2A8,${gold})`, color: '#07110D', boxShadow: '0 20px 50px -20px rgba(212,175,55,0.5)' }}>
@@ -186,7 +186,7 @@ export default function LandingPage() {
             {[
               { icon: Ruler, title: 'Antropometria de precisão', desc: 'Dobras (Pollock 7/3), circunferências e composição corporal com cálculo ao vivo.' },
               { icon: FlaskConical, title: 'Cálculo energético validado', desc: 'TMB por Mifflin, Harris-Benedict, Cunningham e Tinsley. GET e macros num clique.' },
-              { icon: Brain, title: 'IA clínica', desc: 'Correlação de biomarcadores, leitura de exames e condutas baseadas em evidência.' },
+              { icon: Brain, title: 'NUTRA CA.RO — IA clínica', desc: 'A inteligência da NUTRA correlaciona biomarcadores, lê exames e sugere condutas baseadas em evidência.' },
               { icon: Stethoscope, title: 'Prontuário & protocolos', desc: 'Anamnese, plano alimentar, suplementação e exercícios num histórico único.' },
               { icon: Activity, title: 'App do paciente', desc: 'Diário, hidratação, evolução e canal direto — adesão que não cai.' },
               { icon: LineChart, title: 'Relatórios & evolução', desc: 'Gráficos que provam resultado e encantam o paciente.' },
@@ -215,7 +215,7 @@ export default function LandingPage() {
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { n: '01', icon: Zap, t: 'Crie sua conta grátis', d: 'Sem cartão, sem instalação. Entrou, já cadastra pacientes.' },
+              { n: '01', icon: Zap, t: 'Crie sua conta', d: 'Sem instalação, direto no navegador. Entrou, já cadastra pacientes.' },
               { n: '02', icon: Ruler, t: 'Avalie com precisão', d: 'Antropometria e cálculo energético com resultados ao vivo.' },
               { n: '03', icon: HeartPulse, t: 'Acompanhe e fidelize', d: 'O paciente recebe o app e você vê a evolução em gráficos.' },
             ].map((s) => {
@@ -310,7 +310,7 @@ export default function LandingPage() {
                 'Antropometria com cálculo automático',
                 'TMB, GET e macros validados',
                 'App e acompanhamento do paciente',
-                'IA clínica e leitura de exames',
+                'NUTRA CA.RO: IA clínica e leitura de exames',
                 'Auditoria e conformidade LGPD',
                 'Visual que valoriza sua consulta',
               ].map((row) => (
@@ -328,31 +328,31 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ===== DEPOIMENTOS ===== */}
+        {/* ===== RESULTADOS / O QUE VOCÊ GANHA ===== */}
         <section className="mx-auto max-w-6xl px-6 py-16">
           <div className="mb-12 text-center">
-            <div className="mb-2 flex items-center justify-center gap-1">
-              {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current" style={{ color: gold }} />)}
-            </div>
-            <h2 className="font-serif-display text-[clamp(1.8rem,3.5vw,2.6rem)] font-semibold tracking-tight">
-              Quem leva a clínica a sério, <span className="lux-gold-text">leva NUTRA.</span>
+            <div className="font-mono-data text-[11px] uppercase tracking-[0.2em]" style={{ color: emerald }}>O que muda na sua clínica</div>
+            <h2 className="mt-3 font-serif-display text-[clamp(1.8rem,3.5vw,2.6rem)] font-semibold tracking-tight">
+              Mais valor por consulta. <span className="lux-gold-text">Menos trabalho manual.</span>
             </h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {[
-              { q: 'Reduzi o tempo de avaliação pela metade e o paciente sai impressionado com o relatório.', n: 'Dra. Marina Albuquerque', r: 'Nutróloga · São Paulo' },
-              { q: 'O app manteve meus pacientes engajados entre consultas. A adesão subiu e os resultados apareceram.', n: 'Dr. Rafael Tavares', r: 'Nutrólogo · Belo Horizonte' },
-              { q: 'O controle de dados LGPD virou argumento de venda. Passa uma seriedade que ninguém tem.', n: 'Dra. Camila Reis', r: 'Nutricionista · Curitiba' },
-            ].map((t) => (
-              <figure key={t.n} className="lux-glass rounded-2xl p-7">
-                <Quote className="h-6 w-6" style={{ color: gold }} />
-                <blockquote className="mt-3 text-[15px] leading-relaxed" style={{ color: '#D6E4DD' }}>&ldquo;{t.q}&rdquo;</blockquote>
-                <figcaption className="mt-5">
-                  <div className="font-semibold">{t.n}</div>
-                  <div className="font-mono-data text-[11px] uppercase tracking-wider" style={{ color: '#7FA595' }}>{t.r}</div>
-                </figcaption>
-              </figure>
-            ))}
+              { icon: Clock, t: 'Avaliação em minutos', d: 'Antropometria e cálculo energético prontos na hora — o paciente sai com um relatório que impressiona.' },
+              { icon: HeartPulse, t: 'Pacientes engajados', d: 'O app mantém o acompanhamento entre as consultas: diário, hidratação e evolução. A adesão sobe.' },
+              { icon: Shield, t: 'Confiança que fecha', d: 'Controle de dados em conformidade com a LGPD vira argumento de venda — uma seriedade que poucos têm.' },
+            ].map((t) => {
+              const Icon = t.icon
+              return (
+                <div key={t.t} className="lux-glass rounded-2xl p-7">
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: '#10B9810F', border: '1px solid #10B98133' }}>
+                    <Icon className="h-5 w-5" style={{ color: emerald }} />
+                  </div>
+                  <h3 className="font-serif-display text-xl font-semibold">{t.t}</h3>
+                  <p className="mt-2 text-[15px] leading-relaxed" style={{ color: '#9DB3AA' }}>{t.d}</p>
+                </div>
+              )
+            })}
           </div>
         </section>
 
@@ -381,7 +381,7 @@ export default function LandingPage() {
               { q: 'Preciso instalar alguma coisa?', a: 'Não. O NUTRA roda 100% no navegador, no computador ou celular. Cria a conta e já começa.' },
               { q: 'Funciona para nutricionista e nutrólogo?', a: 'Sim, para os dois — com prontuário, antropometria e protocolos.' },
               { q: 'Meus dados e os dos pacientes ficam seguros?', a: 'Sim. Dados no Brasil, criptografados, com auditoria completa e conformidade total com a LGPD.' },
-              { q: 'Como funciona a cobrança?', a: 'Você escolhe um plano (a partir de R$790/mês) e paga mensal ou anual. No anual, você ganha 2 meses grátis. Sem fidelidade.' },
+              { q: 'Como funciona a cobrança?', a: 'Você escolhe um plano (a partir de R$790/mês) e paga mensal ou anual. Sem fidelidade — cancele quando quiser.' },
               { q: 'Consigo cancelar quando quiser?', a: 'Sim, sem fidelidade. Troca de plano ou cancela a qualquer momento.' },
             ].map((f) => (
               <details key={f.q} className="lux-glass group rounded-2xl p-5">
